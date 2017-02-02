@@ -3,8 +3,9 @@ package flexvolume
 type Status string
 
 const (
-	StatusSuccess Status = "Success"
-	StatusFailure Status = "Failure"
+	StatusSuccess Status       = "Success"
+	StatusFailure Status       = "Failure"
+	StatusNotSupported Status  = "Not Supported"
 )
 
 type FlexVolume interface {
