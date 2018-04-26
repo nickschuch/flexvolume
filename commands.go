@@ -17,6 +17,19 @@ func Commands(fv FlexVolume) []cli.Command {
 			},
 		},
 		{
+			Name:  "getvolumename",
+			Usage: "Returns the unique name of the volume",
+			Action: func(c *cli.Context) error {
+				var opts map[string]string
+
+				if err := json.Unmarshal([]byte(c.Args().Get(1)), &opts); err != nil {
+					return err
+				}
+
+				return handle(fv.GetVolumeName(opts))
+			},
+		},
+		{
 			Name:  "attach",
 			Usage: "Attach the volume",
 			Action: func(c *cli.Context) error {
@@ -30,10 +43,56 @@ func Commands(fv FlexVolume) []cli.Command {
 			},
 		},
 		{
+			Name:  "waitforattach",
+			Usage: "Waits until a volume is fully attached to a node and its device emerges",
+			Action: func(c *cli.Context) error {
+				var opts map[string]string
+
+				if err := json.Unmarshal([]byte(c.Args().Get(2)), &opts); err != nil {
+					return err
+				}
+
+				return handle(fv.WaitForAttach(c.Args().Get(1), opts))
+			},
+		},
+		{
 			Name:  "detach",
 			Usage: "Detach the volume",
 			Action: func(c *cli.Context) error {
-				return handle(fv.Detach(c.Args().Get(1)))
+				return handle(fv.Detach(c.Args().Get(1), c.Args().Get(2)))
+			},
+		},
+		{
+			Name:  "isattached",
+			Usage: "Checks that a volume is attached to a node",
+			Action: func(c *cli.Context) error {
+				var opts map[string]string
+
+				if err := json.Unmarshal([]byte(c.Args().Get(1)), &opts); err != nil {
+					return err
+				}
+
+				return handle(fv.Detach(opts, c.Args().Get(2)))
+			},
+		},
+		{
+			Name:  "mountdevice",
+			Usage: "Mounts a volume’s device to a directory",
+			Action: func(c *cli.Context) error {
+				var opts map[string]string
+
+				if err := json.Unmarshal([]byte(c.Args().Get(3)), &opts); err != nil {
+					return err
+				}
+
+				return handle(fv.MountDevice(c.Args().Get(1), c.Args().Get(2), opts))
+			},
+		},
+		{
+			Name:  "unmountdevice",
+			Usage: "Unmounts a volume’s device from a directory",
+			Action: func(c *cli.Context) error {
+				return handle(fv.UnmountDevice(c.Args().Get(1)))
 			},
 		},
 		{
